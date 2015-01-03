@@ -73,4 +73,14 @@
       }
     </style>
   </div>
+  <div foo="bar">
+    There should be a blue border around this element
+    <style is="scoped-style">
+      @media screen {
+        :scope[foo="bar"] {
+          border: 1px solid blue;
+        }
+      }
+    </style>
+  </div>
 </div>

@@ -1,13 +1,33 @@
 (function(){
 "use strict";
 
+  function escapeRegExp (str) {
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+  }
+
   function createScope () {
     return 'scope-' + Math.random().toString(36).slice(2) + '-' + Date.now();
   }
 
+  // Remove all occurrences of ":scope" in al selector and add the scope as
+  // a class selector before. When dealing with :scope, add no space afterwards
+  // to make stuff like :scope[foo=bar] work
+  function rewriteSelector (selector, scope) {
+    var re = /^\s*:scope/;
+    if(selector.match(re)){
+      return '.' + scope + selector.replace(re, '');
+    } else {
+      return '.' + scope + ' ' + selector;
+    }
+  }
+
+  // Remove and replace the rule's selector because there's no way to simply
+  // get a string of all declarations
   function rewriteRule (rule, scope) {
-    var ruleCssText = rule.cssText.replace(/^\s*:scope/, ''); // :scope selector
-    return '.' + scope + ' ' + ruleCssText;
+    var re = new RegExp('^\\s*' + escapeRegExp(rule.selectorText));
+    var css = rule.cssText.replace(re, '');
+    var selector = rewriteSelector(rule.selectorText, scope);
+    return selector + css;
   }
 
   function rewriteRules (source, scope) {
@@ -38,7 +58,7 @@
     createdCallback: function () {
       var scope = createScope();
       rewriteRules(this.sheet, scope);
-      this.innerHTML = sheetToCss(this.sheet);
+      this.innerHTML = sheetToCss(this.sheet); // Keeps styles when cloned
       this.parentNode.classList.add(scope);
     }
   };
