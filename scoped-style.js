@@ -5,14 +5,18 @@
     return 'scope-' + Math.random().toString(36).slice(2) + '-' + Date.now();
   }
 
+  function rewriteRule (rule, scope) {
+    return '.' + scope + ' ' + rule.cssText;
+  }
+
   function rewriteRules (source, scope) {
     var rules = source.rules || source.cssRules;
     for(var i = 0; i < rules.length; i++){
       switch(rules[i].type){
         case 1: // StyleRule
-          var cssText = rules[i].cssText;
+          var newCssText = rewriteRule(rules[i], scope);
           source.deleteRule(i);
-          source.insertRule('.' + scope + ' ' + cssText, i);
+          source.insertRule(newCssText, i);
           break;
         case 4: // MediaRule
           rewriteRules(rules[i], scope);
@@ -26,7 +30,7 @@
   var proto = {
     createdCallback: function () {
       var scope = createScope();
-      var rules = rewriteRules(this.sheet, scope);
+      rewriteRules(this.sheet, scope);
       this.parentNode.classList.add(scope);
     }
   };
