@@ -6,13 +6,14 @@
   }
 
   function rewriteRule (rule, scope) {
-    return '.' + scope + ' ' + rule.cssText;
+    var ruleCssText = rule.cssText.replace(/^\s*:scope/, ''); // :scope selector
+    return '.' + scope + ' ' + ruleCssText;
   }
 
   function rewriteRules (source, scope) {
     var rules = source.rules || source.cssRules;
-    for(var i = 0; i < rules.length; i++){
-      switch(rules[i].type){
+    for (var i = 0; i < rules.length; i++) {
+      switch (rules[i].type) {
         case 1: // StyleRule
           var newCssText = rewriteRule(rules[i], scope);
           source.deleteRule(i);

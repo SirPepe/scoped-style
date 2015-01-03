@@ -62,3 +62,15 @@
   <p>I should be black</p>
 </div>
 
+<div id="ParentPseudoClassTest">
+  <div>
+    There should be a red border around this element
+    <style is="scoped-style">
+      @media screen {
+        :scope {
+          border: 1px solid red;
+        }
+      }
+    </style>
+  </div>
+</div>
