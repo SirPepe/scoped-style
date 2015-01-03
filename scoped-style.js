@@ -28,10 +28,17 @@
     }
   }
 
+  function sheetToCss(sheet){
+    return [].reduce.call(sheet.rules, function(css, rule){
+      return css + rule.cssText;
+    }, '');
+  }
+
   var proto = {
     createdCallback: function () {
       var scope = createScope();
       rewriteRules(this.sheet, scope);
+      this.innerHTML = sheetToCss(this.sheet);
       this.parentNode.classList.add(scope);
     }
   };
