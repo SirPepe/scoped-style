@@ -1,0 +1,64 @@
+<!doctype html>
+<meta charset="utf-8">
+<title></title>
+<script src="scoped-style.js"></script>
+
+<div id="BasicScopingTest">
+  <div>
+    <p>I should be red and italic</p>
+    <style is="scoped-style">
+      p {
+        color: red;
+        font-style: italic;
+      }
+    </style>
+  </div>
+  <p>I should be black and not italic</p>
+</div>
+
+<div id="BasicMultiRuleScopingTest">
+  <div>
+    <p>The bold words should be <b class="foo">lime</b> and <b class="bar">magenta</b></p>
+    <style is="scoped-style">
+      b.foo {
+        color: lime;
+      }
+      b.bar {
+        color: magenta;
+      }
+    </style>
+  </div>
+  <p>The bold words should be <b class="foo">black</b> and <b class="bar">black</b></p>
+</div>
+
+<div id="BasicMultiElementScopingTest">
+  <div>
+    <p>I should be blue and bold</p>
+    <style is="scoped-style">
+      p {
+        color: blue;
+      }
+    </style>
+    <style is="scoped-style">
+      p {
+        font-weight: bold;
+      }
+    </style>
+  </div>
+  <p>I should be black and not bold</p>
+</div>
+
+<div id="MediaQueryScopingTest">
+  <div>
+    <p>I should be green</p>
+    <style is="scoped-style">
+      @media screen {
+        p {
+          color: green;
+        }
+      }
+    </style>
+  </div>
+  <p>I should be black</p>
+</div>
+
