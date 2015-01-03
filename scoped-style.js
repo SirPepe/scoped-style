@@ -1,8 +1,6 @@
 (function(){
 "use strict";
 
-var proto = (function(){
-
   function createScope () {
     return 'scope-' + Math.random().toString(36).slice(2) + '-' + Date.now();
   }
@@ -35,13 +33,10 @@ var proto = (function(){
 
   Object.setPrototypeOf(proto, window.HTMLStyleElement.prototype);
 
-  return proto;
 
-})();
-
-document.registerElement('scoped-style', {
-  extends: 'style',
-  prototype: proto
-});
+  document.registerElement('scoped-style', {
+    extends: 'style',
+    prototype: proto
+  });
 
 })();
