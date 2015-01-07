@@ -67,7 +67,7 @@
     There should be a red border around this element
     <style is="scoped-style">
       @media screen {
-        :scope {
+        -x-scope {
           border: 1px solid red;
         }
       }
@@ -77,8 +77,26 @@
     There should be a blue border around this element
     <style is="scoped-style">
       @media screen {
-        :scope[foo="bar"] {
+        -x-scope[foo="bar"] {
           border: 1px solid blue;
+        }
+      }
+    </style>
+  </div>
+</div>
+
+<div id="ParentPseudoClassPseudoElementTest">
+  <div>
+    There should be two red dots in this line
+    <style is="scoped-style">
+      @media screen {
+        -x-scope::before, -x-scope::after {
+          content: "";
+          display: inline-block;
+          background: red;
+          width: 10px;
+          height: 10px;
+          border-radius: 5px;
         }
       }
     </style>

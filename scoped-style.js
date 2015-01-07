@@ -13,12 +13,16 @@
   // a class selector before. When dealing with :scope, add no space afterwards
   // to make stuff like :scope[foo=bar] work
   function rewriteSelector (selector, scope) {
-    var re = /^\s*:scope/;
-    if(selector.match(re)){
-      return '.' + scope + selector.replace(re, '');
-    } else {
-      return '.' + scope + ' ' + selector;
-    }
+    var re = /(?:^|\s|\n|\W)*-x-scope\b/;
+    return selector.split(',')
+      .map(function(s){
+        if(selector.match(re)){
+          return '.' + scope + s.replace(re, '');
+        } else {
+          return '.' + scope + ' ' + s;
+        }
+      })
+      .join(',');
   }
 
   // Remove and replace the rule's selector because there's no way to simply
