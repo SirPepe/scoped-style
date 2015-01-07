@@ -53,7 +53,8 @@
   }
 
   function sheetToCss(sheet){
-    return [].reduce.call(sheet.rules, function(css, rule){
+    var rules =  sheet.rules || sheet.cssRules;
+    return [].reduce.call(rules, function(css, rule){
       return css + rule.cssText;
     }, '');
   }
@@ -68,7 +69,6 @@
   };
 
   Object.setPrototypeOf(proto, window.HTMLStyleElement.prototype);
-
 
   document.registerElement('scoped-style', {
     extends: 'style',
