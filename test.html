@@ -2,6 +2,11 @@
 <meta charset="utf-8">
 <title></title>
 <script src="scoped-style.js"></script>
+<style>
+  body > div[id] {
+    margin: 1em 0;
+  }
+</style>
 
 <div id="BasicScopingTest">
   <div>
@@ -29,6 +34,18 @@
     </style>
   </div>
   <p>The bold words should be <b class="foo">black</b> and <b class="bar">black</b></p>
+</div>
+
+<div id="BasicMultiSelectorScopingTest">
+  <div>
+    <p>The bold and italic words should be <b>green</b> and <i>green</i></p>
+    <style is="scoped-style">
+      b, i {
+        color: green;
+      }
+    </style>
+  </div>
+  <p>The bold and italic words should not be <b>green</b> and <i>green</i></p>
 </div>
 
 <div id="BasicMultiElementScopingTest">
