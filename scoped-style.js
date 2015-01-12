@@ -9,9 +9,9 @@
     return 'scope-' + Math.random().toString(36).slice(2) + '-' + Date.now();
   }
 
-  // Remove all occurrences of ":scope" in al selector and add the scope as
-  // a class selector before. When dealing with :scope, add no space afterwards
-  // to make stuff like :scope[foo=bar] work
+  // Remove all occurrences of "-x-scope" in a selector and add the scope as
+  // a class selector before. When dealing with -x-scope, add no space
+  // afterwards to make stuff like -x-scope[foo=bar] work
   function rewriteSelector (selector, scope) {
     var re = /(?:^|\s|\n|\W)*-x-scope\b/;
     return selector.split(',')
