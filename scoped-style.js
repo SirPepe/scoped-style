@@ -1,39 +1,22 @@
 (function(){
 "use strict";
 
-  var scopeClassRe = /\bscope-[a-z0-9]*-[0-9]*\b/;
-  var scopeSelectorRe = /(?:^|\s|\n|\W)*-x-scope\b/;
-
   function escapeRegExp (str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
   }
 
-  function uniqueString(){
-    return Math.random().toString(36).slice(2) + '-' + Date.now();
-  }
+  var scopeClassRe = /\bscope-[a-z0-9]*-[0-9]*\b/;
+  var scopeSelectorRe = /(?:^|\s|\n|\W)*-x-scope\b/;
 
   function createScope () {
-    return 'scope-' + uniqueString();
+    return 'scope-' + Math.random().toString(36).slice(2) + '-' + Date.now();
   }
 
-  function createTempId () {
-    return 'TempId-' + uniqueString();
-  }
-
-  // Recreating jQueries .find()
-  function find(node, selector){
-    var id = node.getAttribute('id');
-    var idIsTmp = false;
-    if(!id){
-      idIsTmp = true;
-      id = createTempId();
-      node.setAttribute('id', id);
-    }
-    var result = document.querySelector('#' + id + ' ' + selector);
-    if(idIsTmp){
-      node.removeAttribute('id');
-    }
-    return result;
+  function findChildren (node, selector) {
+    var descendants = node.querySelectorAll(selector);
+    return [].filter.call(descendants, function (descendant) {
+      return (descendant.parentNode === node);
+    });
   }
 
   // Remove all occurrences of "-x-scope" in a selector and add the scope as
@@ -85,8 +68,8 @@
     // elements per parent node
     [].forEach.call(node.classList, function (className) {
       if(className.match(scopeClassRe)){
-        var keepScope = !!find(node, '> [data-scope="' + className + '"]');
-        if(!keepScope){
+        var styleNodes = findChildren(node, '[data-scope="' + className + '"]');
+        if(styleNodes.length === 0){
           node.classList.remove(className);
         }
       }
