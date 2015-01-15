@@ -10,14 +10,14 @@
   }
 
   // Remove all occurrences of "-x-scope" in a selector and add the scope as
-  // a class selector before. When dealing with -x-scope, add no space
-  // afterwards to make stuff like -x-scope[foo=bar] work
+  // a class selector before. When replacing -x-scope with the class selector,
+  // add no space afterwards to make stuff like -x-scope[foo=bar] work
   function rewriteSelector (selector, scope) {
-    var re = /(?:^|\s|\n|\W)*-x-scope\b/;
+    var reSelector = /(?:^|\s|\n|\W)*-x-scope\b/;
     return selector.split(',')
       .map(function(s){
-        if(selector.match(re)){
-          return '.' + scope + s.replace(re, '');
+        if(selector.match(reSelector)){
+          return '.' + scope + s.replace(reSelector, '');
         } else {
           return '.' + scope + ' ' + s;
         }
@@ -25,11 +25,11 @@
       .join(',');
   }
 
-  // Remove and replace the rule's selector because there's no way to simply
+  // Remove and replace the rule's selector because there's no other way to only
   // get a string of all declarations
   function rewriteRule (rule, scope) {
-    var re = new RegExp('^\\s*' + escapeRegExp(rule.selectorText));
-    var css = rule.cssText.replace(re, '');
+    var reSelector = new RegExp('^\\s*' + escapeRegExp(rule.selectorText));
+    var css = rule.cssText.replace(reSelector, '');
     var selector = rewriteSelector(rule.selectorText, scope);
     return selector + css;
   }
