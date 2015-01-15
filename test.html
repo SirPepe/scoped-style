@@ -81,7 +81,7 @@
 
 <div id="ParentPseudoClassTest">
   <div>
-    There should be a red border around this element
+    There should be a solid red border around this element
     <style is="scoped-style">
       @media screen {
         -x-scope {
@@ -91,11 +91,14 @@
     </style>
   </div>
   <div foo="bar">
-    There should be a blue border around this element
+    There should be a dashed blue border around this element
     <style is="scoped-style">
       @media screen {
         -x-scope[foo="bar"] {
           border: 1px solid blue;
+        }
+        -x-scope:not([foo="baz"]) {
+          border-style: dashed;
         }
       }
     </style>
