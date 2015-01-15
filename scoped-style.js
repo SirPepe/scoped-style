@@ -35,7 +35,7 @@
   }
 
   function rewriteRules (source, scope) {
-    var rules = source.rules || source.cssRules;
+    var rules = source.cssRules;
     for (var i = 0; i < rules.length; i++) {
       switch (rules[i].type) {
         case 1: // StyleRule
@@ -53,8 +53,7 @@
   }
 
   function sheetToCss(sheet){
-    var rules =  sheet.rules || sheet.cssRules;
-    return [].reduce.call(rules, function(css, rule){
+    return [].reduce.call(sheet.cssRules, function(css, rule){
       return css + rule.cssText;
     }, '');
   }
