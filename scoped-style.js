@@ -78,20 +78,20 @@
     }
   }
 
-  function setScope (element, scope) {
-    // Remove scope classes for which no child style element (identified by its
+  function setScope (node, scope) {
+    // Remove scope classes for which no child style node (identified by its
     // data-scope property) can be found. This is required to keep scopes unique
     // when cloning style elements while still supporting multiple scoped style
-    // elements per parent element
-    [].forEach.call(element.classList, function (className) {
+    // elements per parent node
+    [].forEach.call(node.classList, function (className) {
       if(className.match(scopeClassRe)){
-        var keepScope = !!find(element, '> [data-scope="' + className + '"]');
+        var keepScope = !!find(node, '> [data-scope="' + className + '"]');
         if(!keepScope){
-          element.classList.remove(className);
+          node.classList.remove(className);
         }
       }
     });
-    element.classList.add(scope);
+    node.classList.add(scope);
   }
 
   var proto = {
