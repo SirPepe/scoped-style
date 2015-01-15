@@ -1,23 +1,49 @@
 (function(){
 "use strict";
 
+  var scopeClassRe = /\bscope-[a-z0-9]*-[0-9]*\b/;
+  var scopeSelectorRe = /(?:^|\s|\n|\W)*-x-scope\b/;
+
   function escapeRegExp (str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
   }
 
+  function uniqueString(){
+    return Math.random().toString(36).slice(2) + '-' + Date.now();
+  }
+
   function createScope () {
-    return 'scope-' + Math.random().toString(36).slice(2) + '-' + Date.now();
+    return 'scope-' + uniqueString();
+  }
+
+  function createTempId () {
+    return 'TempId-' + uniqueString();
+  }
+
+  // Recreating jQueries .find()
+  function find(node, selector){
+    var id = node.getAttribute('id');
+    var idIsTmp = false;
+    if(!id){
+      idIsTmp = true;
+      id = createTempId();
+      node.setAttribute('id', id);
+    }
+    var result = document.querySelector('#' + id + ' ' + selector);
+    if(idIsTmp){
+      node.removeAttribute('id');
+    }
+    return result;
   }
 
   // Remove all occurrences of "-x-scope" in a selector and add the scope as
   // a class selector before. When replacing -x-scope with the class selector,
   // add no space afterwards to make stuff like -x-scope[foo=bar] work
   function rewriteSelector (selector, scope) {
-    var reSelector = /(?:^|\s|\n|\W)*-x-scope\b/;
     return selector.split(',')
       .map(function(s){
-        if(selector.match(reSelector)){
-          return '.' + scope + s.replace(reSelector, '');
+        if(selector.match(scopeSelectorRe)){
+          return '.' + scope + s.replace(scopeSelectorRe, '');
         } else {
           return '.' + scope + ' ' + s;
         }
@@ -52,18 +78,28 @@
     }
   }
 
-  function sheetToCss(sheet){
-    return [].reduce.call(sheet.cssRules, function(css, rule){
-      return css + rule.cssText;
-    }, '');
+  function setScope (element, scope) {
+    // Remove scope classes for which no child style element (identified by its
+    // data-scope property) can be found. This is required to keep scopes unique
+    // when cloning style elements while still supporting multiple scoped style
+    // elements per parent element
+    [].forEach.call(element.classList, function (className) {
+      if(className.match(scopeClassRe)){
+        var keepScope = !!find(element, '> [data-scope="' + className + '"]');
+        if(!keepScope){
+          element.classList.remove(className);
+        }
+      }
+    });
+    element.classList.add(scope);
   }
 
   var proto = {
-    createdCallback: function () {
+    attachedCallback: function () {
       var scope = createScope();
+      this.setAttribute('data-scope', scope);
       rewriteRules(this.sheet, scope);
-      this.innerHTML = sheetToCss(this.sheet); // Keeps styles when cloned
-      this.parentNode.classList.add(scope);
+      setScope(this.parentNode, scope);
     }
   };
 

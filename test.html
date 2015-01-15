@@ -122,3 +122,21 @@
     </style>
   </div>
 </div>
+
+<div id="CloningTest">
+  <div>
+    <p>I should be red and italic</p>
+    <style is="scoped-style">
+      p {
+        color: red;
+        font-style: italic;
+      }
+    </style>
+  </div>
+</div>
+<script>
+  var container = document.querySelector('#CloningTest');
+  var original = container.querySelector('div');
+  var clone = original.cloneNode(true);
+  container.appendChild(clone);
+</script>
