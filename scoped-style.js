@@ -77,20 +77,25 @@
     node.classList.add(scope);
   }
 
-  var proto = {
-    attachedCallback: function () {
-      var scope = createScope();
-      this.setAttribute('data-scope', scope);
-      rewriteRules(this.sheet, scope);
-      setScope(this.parentNode, scope);
-    }
-  };
-
-  Object.setPrototypeOf(proto, window.HTMLStyleElement.prototype);
-
   document.registerElement('scoped-style', {
     extends: 'style',
-    prototype: proto
+    prototype: Object.create(window.HTMLStyleElement.prototype, {
+      attachedCallback: {
+        value: function () {
+          var scope = createScope();
+          this.setAttribute('data-scope', scope);
+          rewriteRules(this.sheet, scope);
+          setScope(this.parentNode, scope);
+        }
+      },
+      escapeRegExp: { value: escapeRegExp },
+      createScope: { value: createScope },
+      findChildren: { value: findChildren },
+      rewriteSelector: { value: rewriteSelector },
+      rewriteRule: { value: rewriteRule },
+      rewriteRules: { value: rewriteRules },
+      setScope: { value: setScope }
+    })
   });
 
 })();
