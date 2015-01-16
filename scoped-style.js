@@ -1,5 +1,5 @@
-(function(){
-"use strict";
+var ScopedStyle = (function(){
+  "use strict";
 
   function escapeRegExp (str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
@@ -77,7 +77,7 @@
     node.classList.add(scope);
   }
 
-  document.registerElement('scoped-style', {
+  return document.registerElement('scoped-style', {
     extends: 'style',
     prototype: Object.create(window.HTMLStyleElement.prototype, {
       attachedCallback: {
