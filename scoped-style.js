@@ -12,6 +12,30 @@ var ScopedStyle = (function(){
     return 'scope-' + Math.random().toString(36).slice(2) + '-' + Date.now();
   }
 
+  function splitSelector(input){
+    var result = [];
+    var index = 0;
+    var quote = false;
+    for(var i = 0; i < input.length; i++){
+      if(typeof result[index] === 'undefined'){
+        result[index] = '';
+      }
+      if(input[i] === ',' && quote === false){
+        index++;
+      } else {
+        if(['"', "'"].indexOf(input[i]) !== -1){
+          if(quote === false){
+            quote = input[i];
+          } else if(quote === input[i]) {
+            quote = false;
+          }
+        }
+        result[index] += input[i];
+      }
+    }
+    return result.map(Function.prototype.call.bind(String.prototype.trim));
+  }
+
   function findChildren (node, selector) {
     var descendants = node.querySelectorAll(selector);
     return [].filter.call(descendants, function (descendant) {
@@ -23,7 +47,7 @@ var ScopedStyle = (function(){
   // a class selector before. When replacing -x-scope with the class selector,
   // add no space afterwards to make stuff like -x-scope[foo=bar] work
   function rewriteSelector (selector, scope) {
-    return selector.split(',')
+    return splitSelector(selector)
       .map(function(s){
         if(selector.match(scopeSelectorRe)){
           return '.' + scope + s.replace(scopeSelectorRe, '');
@@ -90,6 +114,7 @@ var ScopedStyle = (function(){
       },
       escapeRegExp: { value: escapeRegExp },
       createScope: { value: createScope },
+      splitSelector: { value: splitSelector },
       findChildren: { value: findChildren },
       rewriteSelector: { value: rewriteSelector },
       rewriteRule: { value: rewriteRule },
