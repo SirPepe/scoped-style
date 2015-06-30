@@ -3,6 +3,9 @@
 <title></title>
 <script src="scoped-style.js"></script>
 <style>
+  body {
+    font-size: 2em;
+  }
   body > div[id] {
     margin: 1em 0;
   }
@@ -99,6 +102,16 @@
         }
         -x-scope:not([foo="baz"]) {
           border-style: dashed;
+        }
+      }
+    </style>
+  </div>
+  <div class="foobar">
+    There should be a solid green border around this element
+    <style is="scoped-style">
+      @media screen {
+        -x-scope.foobar {
+          border: 1px solid green;
         }
       }
     </style>
