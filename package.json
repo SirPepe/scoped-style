@@ -1,0 +1,25 @@
+{
+  "name": "scoped-style",
+  "version": "1.0.0",
+  "description": "Scoped Style Sheets",
+  "main": "dist/scoped-style.min.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "node_modules/.bin/uglifyjs src/scoped-style.js --c --screw-ie8 -o dist/scoped-style.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SirPepe/scoped-style.git"
+  },
+  "author": "peter@peterkroener.de",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SirPepe/scoped-style/issues"
+  },
+  "homepage": "https://github.com/SirPepe/scoped-style#readme",
+  "devDependencies": {
+    "uglify-js": "^2.6.4"
+  }
+}

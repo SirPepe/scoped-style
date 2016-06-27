@@ -1,4 +1,4 @@
-var ScopedStyle = (function(){
+window.ScopedStyle = window.ScopedStyle || (function(){
   "use strict";
 
   function escapeRegExp (str) {
