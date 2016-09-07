@@ -6,12 +6,40 @@
 <script src="../dist/scoped-style.min.js"></script>
 <style>
   body {
-    font-size: 2em;
+    font-size: 1em;
   }
   body > div[id] {
     margin: 1em 0;
   }
 </style>
+
+<div id="SmokeTest">
+  <div>
+    <p>This empty style element should not cause any problems</p>
+    <style is="scoped-style"></style>
+  </div>
+  <div>
+    <p>The empty rules should not cause any problems</p>
+    <style is="scoped-style">
+      .foo {}
+      -x-scope {}
+    </style>
+  </div>
+</div>
+
+<div id="ScriptTest">
+  <div><p>This should be navy (script-generated style)</p></div>
+  <script>
+    var html = "<style is='scoped-style'>p { color: navy }</style>";
+    document.querySelector("#ScriptTest div:nth-of-type(1)").innerHTML += html;
+  </script>
+  <div><p>This should be orange (script-generated style)</p></div>
+  <script>
+    var el = document.createElement("style", "scoped-style");
+    el.innerHTML = "p { color: orange }";
+    document.querySelector("#ScriptTest div:nth-of-type(2)").appendChild(el);
+  </script>
+</div>
 
 <div id="BasicScopingTest">
   <div>
@@ -142,16 +170,23 @@
   <div>
     <p>I should be red and italic</p>
     <style is="scoped-style">
+      -x-scope p {
+        font-style: italic;
+      }
       p {
         color: red;
-        font-style: italic;
       }
     </style>
   </div>
 </div>
+
 <script>
   var container = document.querySelector('#CloningTest');
   var original = container.querySelector('div');
   var clone = original.cloneNode(true);
   container.appendChild(clone);
+  setTimeout(function(){
+    var clone = original.cloneNode(true);
+    container.appendChild(clone);
+  });
 </script>
