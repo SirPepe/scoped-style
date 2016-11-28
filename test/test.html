@@ -3,7 +3,7 @@
 <title></title>
 <!-- Custom Elements Polyfill -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/document-register-element/1.0.7/document-register-element.js"></script>
-<script src="../dist/scoped-style.min.js"></script>
+<script async src="../src/scoped-style.js"></script>
 <style>
   body {
     font-size: 1em;
@@ -27,7 +27,7 @@
   </div>
 </div>
 
-<div id="ScriptTest">
+<!--<div id="ScriptTest">
   <div><p>This should be navy (script-generated style)</p></div>
   <script>
     var html = "<style is='scoped-style'>p { color: navy }</style>";
@@ -181,6 +181,7 @@
 </div>
 
 <script>
+(function(){
   var container = document.querySelector('#CloningTest');
   var original = container.querySelector('div');
   var clone = original.cloneNode(true);
@@ -189,4 +190,5 @@
     var clone = original.cloneNode(true);
     container.appendChild(clone);
   });
+})();
 </script>

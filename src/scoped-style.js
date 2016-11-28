@@ -106,18 +106,10 @@ window.ScopedStyle = window.ScopedStyle || (function(){
     prototype: Object.create(window.HTMLStyleElement.prototype, {
       attachedCallback: {
         value: function () {
-          // Need to clear the stack just to be SURE that this works in
-          // polyfilled environments. I was unable to reproduce the problem in
-          // my tests, but in big projects the attachedCallback sometimes gets
-          // called before there is a styleSheet object on the element instance.
-          // Trust me on this :)
-          var self = this;
-          setTimeout(function(){
-            var scope = createScope();
-            self.setAttribute('data-scope', scope);
-            rewriteRules(self.sheet, scope);
-            setScope(self.parentNode, scope);
-          }, 0);
+          var scope = createScope();
+          this.setAttribute('data-scope', scope);
+          rewriteRules(this.sheet, scope);
+          setScope(this.parentNode, scope);
         }
       },
       escapeRegExp: { value: escapeRegExp },
