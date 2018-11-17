@@ -101,7 +101,22 @@ window.ScopedStyle = window.ScopedStyle || (function(){
     node.classList.add(scope);
   }
 
-  return document.registerElement('scoped-style', {
+  class ScopedStyle extends HTMLStyleElement {
+    connectedCallback () {
+      var scope = createScope();
+      this.setAttribute('data-scope', scope);
+      rewriteRules(this.sheet, scope);
+      setScope(this.parentNode, scope);
+    }
+  }
+
+  customElements.define('scoped-style', ScopedStyle, {
+    extends: 'style',
+  });
+
+  return ScopedStyle;
+
+  /*return document.registerElement('scoped-style', {
     extends: 'style',
     prototype: Object.create(window.HTMLStyleElement.prototype, {
       attachedCallback: {
@@ -121,6 +136,6 @@ window.ScopedStyle = window.ScopedStyle || (function(){
       rewriteRules: { value: rewriteRules },
       setScope: { value: setScope }
     })
-  });
+  });*/
 
 })();
